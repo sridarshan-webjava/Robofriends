@@ -18,6 +18,11 @@
   transform: scale(1.1);
 }
 
+.card img {
+  width: 200px;
+  height: 200px;
+}
+
 .card h2 {
   font-size: 1.35rem;
   font-weight: 700;

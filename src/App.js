@@ -4,7 +4,7 @@ import CardList from "./CardList";
 import Searchbox from "./Searchbox";
 import loader from "./Spinner-1s-200px.svg";
 import { setSearchField, requestRobots } from "./action";
-// import { robots } from "./robots";
+import ErrorBoundary from "./ErrorBoundary";
 
 const mapStateToProps = state => {
   return {
@@ -22,47 +22,35 @@ const mapDispatchToProps = dispatch => {
   };
 };
 class App extends Component {
-  // constructor(props) {
-  //   super(props);
-  //   // this.state = {
-  //   //   robots: [],
-  //   // };
-  // }
-
-  // onSearchChange = event => {
-  //   // console.log(event.target.value);
-  //   this.setState({ searchField: event.target.value });
-  // };
-
   componentDidMount() {
-    // fetch("https://jsonplaceholder.typicode.com/users")
-    //   .then(response => response.json())
-    //   .then(users => this.setState({ robots: users }))
-    //   .catch(err => console.log(err));
     this.props.onRequestRobots();
   }
 
+  componentDidUpdate() {
+    console.log("component updated", this.props.robots, this.props.isPending);
+  }
   render() {
-    // console.log(store);
     const { searchField, onSearchChange, robots, isPending } = this.props;
     const filteredRobots = robots.filter(robot => {
       return robot.name.toLowerCase().startsWith(searchField.toLowerCase());
     });
-    if (isPending) {
-      return (
-        // <div>
-        <img src={loader} alt="" className="loader" />
-        // </div>
-      );
-    } else {
-      return (
-        <div>
+    return (
+      <>
+        <header>
           <h1>Robofriends</h1>
-          <Searchbox searchChange={onSearchChange} />
-          <CardList robots={filteredRobots} />
-        </div>
-      );
-    }
+        </header>
+        {isPending ? (
+          <img src={loader} alt="loader" className="loader" />
+        ) : (
+          <div>
+            <ErrorBoundary>
+              <Searchbox searchChange={onSearchChange} />
+              <CardList robots={filteredRobots} />
+            </ErrorBoundary>
+          </div>
+        )}
+      </>
+    );
   }
 }
 
