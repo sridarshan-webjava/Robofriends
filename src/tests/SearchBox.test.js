@@ -1,12 +1,12 @@
 import { shallow } from "enzyme";
 import React from "react";
-import SearchBox from "../SearchBox";
+import Searchbox from "../Searchbox";
 
 let wrapper;
 const mockSearchChangeFn = jest.fn();
 
 beforeEach(() => {
-  wrapper = shallow(<SearchBox searchChange={mockSearchChangeFn} />);
+  wrapper = shallow(<Searchbox searchChange={mockSearchChangeFn} />);
 });
 
 it("Test if the snapshot match", () => {
