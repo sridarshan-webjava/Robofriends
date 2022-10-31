@@ -1,54 +1,57 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import CardList from "./CardList";
 import Searchbox from "./Searchbox";
 import loader from "./Spinner-1s-200px.svg";
-// import { robots } from "./robots";
+import { setSearchField, requestRobots } from "./action";
+import ErrorBoundary from "./ErrorBoundary";
 
-class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      robots: [],
-      searchField: "",
-    };
-  }
-
-  onSearchChange = event => {
-    // console.log(event.target.value);
-    this.setState({ searchField: event.target.value });
+const mapStateToProps = state => {
+  return {
+    searchField: state.searchRobots.searchField,
+    robots: state.requestRobots.robots,
+    isPending: state.requestRobots.isPending,
+    error: state.requestRobots.error,
   };
+};
 
+const mapDispatchToProps = dispatch => {
+  return {
+    onSearchChange: e => dispatch(setSearchField(e.target.value)),
+    onRequestRobots: () => dispatch(requestRobots()),
+  };
+};
+class App extends Component {
   componentDidMount() {
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then(response => response.json())
-      .then(users => {
-        {
-        }
-      });
+    this.props.onRequestRobots();
   }
 
+  componentDidUpdate() {
+    console.log("component updated", this.props.robots, this.props.isPending);
+  }
   render() {
-    const filteredRobots = this.state.robots.filter(robot => {
-      return robot.name
-        .toLowerCase()
-        .startsWith(this.state.searchField.toLowerCase());
+    const { searchField, onSearchChange, robots, isPending } = this.props;
+    const filteredRobots = robots.filter(robot => {
+      return robot.name.toLowerCase().startsWith(searchField.toLowerCase());
     });
-    if (this.state.robots.length === 0) {
-      return (
-        // <div>
-        <img src={loader} alt="" className="loader" />
-        // </div>
-      );
-    } else {
-      return (
-        <div>
+    return (
+      <>
+        <header>
           <h1>Robofriends</h1>
-          <Searchbox searchChange={this.onSearchChange} />
-          <CardList robots={filteredRobots} />
-        </div>
-      );
-    }
+        </header>
+        {isPending ? (
+          <img src={loader} alt="loader" className="loader" />
+        ) : (
+          <div>
+            <ErrorBoundary>
+              <Searchbox searchChange={onSearchChange} />
+              <CardList robots={filteredRobots} />
+            </ErrorBoundary>
+          </div>
+        )}
+      </>
+    );
   }
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
