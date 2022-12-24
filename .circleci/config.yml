@@ -2,7 +2,7 @@ version: 2.1
 
 jobs:
   build:
-    name: Building the code
+    description: Building the code
     docker:
       - image: cimg/node:17.2.0 # the primary container, where your job's commands are run
         auth:
@@ -18,7 +18,7 @@ jobs:
           command: CI=true npm run build
 
   test:
-    name: Testing the code
+    description: Testing the code
     docker:
       - image: cimg/node:17.2.0
         auth:
