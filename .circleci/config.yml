@@ -33,9 +33,24 @@ jobs:
       - run:
           name: Test the code
           command: npm run testCode
+  
+  execute_job:
+    description: Seek manual review for triggering build and test jobs
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - run:
+          name: Echo command
+          command: echo "executing job"
 
 workflows:
   my-workflow:
     jobs:
-      - build
-      - test
+      - execute_job:
+          type: approval
+      - build:
+          requires:
+            - execute_job
+      - test:
+          requires:
+            - execute_job
