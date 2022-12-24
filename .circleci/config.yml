@@ -1,40 +1,31 @@
-version: 2.1
-
+version: 2.1 
 jobs:
-  build:
-    description: Building the code
-    docker:
-      - image: cimg/node:17.2.0 # the primary container, where your job's commands are run
-        auth:
-          username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD # context / project UI env-var reference
-    steps:
-      - checkout # check out the code in the project directory
-      - run:
-          name: Install dependencies
-          command: npm install
-      - run:
-          name: Run the build
-          command: npm run build
-
-  test:
-    description: Testing the code
-    docker:
-      - image: cimg/node:17.2.0
-        auth:
-          username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD
-
-    steps:
-      - run:
-          name: Install dependencies
-          command: npm install
-      - run:
-          name: Test the code
-          command: npm run testCode
-
+   build:
+     docker:
+       - image: circleci/node:latest
+     steps:
+       - checkout
+       - run: npm install
+       - run: CI=true npm run build
+   test:
+     docker:
+       - image: circleci/node:latest
+     steps:
+       - checkout
+       - run: npm install
+       - run: npm run test
+   hithere:
+     docker:
+       - image: circleci/node:latest
+     steps:
+       - checkout
+       - run: echo "Helllooooo!"
 workflows:
-  my-workflow:
+  version: 2
+  build-test-and-lint:
     jobs:
       - build
-      - test
+      - hithere
+      - test:
+          requires:
+            - hithere
