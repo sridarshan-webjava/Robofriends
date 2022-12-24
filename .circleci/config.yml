@@ -36,4 +36,5 @@ jobs:
 workflows:
   my-workflow:
     jobs:
-      - hello-job
+      - build
+      - test
