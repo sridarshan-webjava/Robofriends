@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="card flow-content"
+>
+  <img
+    alt="robot"
+    src="https://robohash.org/123?size=200x200"
+  />
+  <h2>
+    Sample
+  </h2>
+  <p>
+    sample@xyz.com
+  </p>
+</div>
+`;
