@@ -15,7 +15,7 @@ jobs:
           command: npm install
       - run:
           name: Run the build
-          command: CI=true npm run build
+          command: npm run build
 
   test:
     description: Testing the code
