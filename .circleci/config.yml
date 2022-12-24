@@ -1,7 +1,8 @@
 version: 2.1
 
 jobs:
-  hello-job:
+  build:
+    name: Building the code
     docker:
       - image: cimg/node:17.2.0 # the primary container, where your job's commands are run
         auth:
@@ -10,10 +11,27 @@ jobs:
     steps:
       - checkout # check out the code in the project directory
       - run:
-          name: Sample command for test
-          command: |
-            echo "My first command"
-            echo "Using circle ci for the first time"
+          name: Install dependencies
+          command: npm install
+      - run:
+          name: Run the build
+          command: CI=true npm run build
+
+  test:
+    name: Testing the code
+    docker:
+      - image: cimg/node:17.2.0
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD
+
+    steps:
+      - run:
+          name: Install dependencies
+          command: npm install
+      - run:
+          name: Test the code
+          command: npm run testCode
 
 workflows:
   my-workflow:
